@@ -21,6 +21,8 @@ class Settings(BaseSettings):
 
     load_dotenv()
 
-    SOME_ENV_VAR = os.getenv("SOME_ENV_VAR", "")
+    SQLITE_FILE_NAME = os.getenv("SQLITE_FILE_NAME", "")
+    SQLITE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
+
 
 settings = Settings()
