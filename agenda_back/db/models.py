@@ -13,7 +13,7 @@ class CalendarEventBase(SQLModel):
     month: int
 
 
-class CalendarEvent(SQLModel, Table=True):
+class CalendarEvent(SQLModel, table=True):
     """Calendar Events Table Class."""
 
     id_: UUID = Field(primary_key=True)
