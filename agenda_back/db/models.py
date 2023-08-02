@@ -8,7 +8,7 @@ from sqlmodel import Field, SQLModel
 class CalendarEventBase(SQLModel):
     """Calendar Events Base Class."""
 
-    id_: str
+    id_: UUID
     day: int
     month: int
 
