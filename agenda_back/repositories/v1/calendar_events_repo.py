@@ -1,6 +1,5 @@
 """Repository to query Calendar Events in postgres db."""
 
-
 from agenda_back.db.models import CalendarEvent
 
 
