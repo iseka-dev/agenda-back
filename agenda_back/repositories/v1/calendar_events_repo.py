@@ -1,7 +1,7 @@
 """Repository to query Calendar Events in postgres db."""
 
-from fastapi import Query
-from sqlmodel import Depends, Session, select
+from fastapi import Depends, Query
+from sqlmodel import Session, select
 
 from agenda_back.db.database import get_session
 from agenda_back.db.models import CalendarEvent
