@@ -11,6 +11,11 @@ app.include_router(router)
 
 
 @app.on_event("startup")
-def on_startup() -> None:
-    """Initialize db at server startup."""
+def startup() -> None:
+    """Execute at server startup."""
     db_init()
+
+
+@app.on_event("shutdown")
+def shutdown() -> None:
+    """Execute at shutdown."""

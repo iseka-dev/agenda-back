@@ -1,31 +1,40 @@
 """Repository to query Calendar Events in postgres db."""
 
-from fastapi import Depends, Query
-from sqlmodel import Session, select
+import uuid
 
-from agenda_back.db.database import get_session
+from sqlalchemy.orm import Session
+
+from agenda_back.common.logger import log
 from agenda_back.db.models import CalendarEvent
-from agenda_back.models.v1.common_models import IdResponse
+from agenda_back.schemas.v1.common_schemas import IdResponse
 
 
 async def get_calendar_events(
-    *,
-    session: Session = Depends(get_session),
-    offset: int = 0,
-    limit: int = Query(default=100, lte=100),
+    session: Session,
+    skip: int = 0,
+    limit: int = 100
 ) -> list[CalendarEvent]:
     """Get list of calendar events from database."""
     CalendarEvent.from_orm()
-    calendar_events = await session.exec(
-        select(CalendarEvent).offset(offset).limit(limit)
-    ).all()
+    calendar_events = session.query(
+        CalendarEvent
+    ).offset(skip).limit(limit).all()
     return calendar_events
 
 
-async def create_calendar_event_repo(
+def create_calendar_event_repo(
     calendar_event: CalendarEvent,
-    session: Session = Depends(get_session),
+    session: Session
 ) -> IdResponse:
     """Create a Calendar Event Object in the db."""
-    response = await session.add(CalendarEvent.from_orm(calendar_event))
-    return response
+    log.info(f"Creating Calendar Event: {calendar_event}")
+    new_calendar_event = CalendarEvent(
+        id_=uuid.uuid4(),
+        start_datetime="2023-08-08T00:00:00",
+        end_datetime="2023-08-08T12:00:00",
+    )
+    session.add(new_calendar_event)
+    session.commit()
+    session.refresh(new_calendar_event)
+    log.info(f"Calendar Event stored in database: {new_calendar_event}")
+    return {"id_": new_calendar_event.id_}

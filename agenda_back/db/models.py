@@ -1,20 +1,26 @@
 """This module has the models for the project."""
 
 import datetime
-from uuid import UUID
 
-from sqlmodel import Field, SQLModel
+from sqlalchemy import Column, DateTime, String, Text, Uuid
+
+from agenda_back.db.database import Base
+
+now = datetime.datetime.utcnow
 
 
-class CalendarEvent(SQLModel):
+class CalendarEvent(Base):
     """Calendar Events Base Class."""
 
-    id_: UUID = Field(primary_key=True)
-    day: int = Field()
-    month: int = Field()
-    start_date: datetime.date = Field()
-    start_time: datetime.time = Field()
-    start_datetime: datetime.datetime = Field()
-    end_date: datetime.date = Field()
-    end_time: datetime.time = Field()
-    end_datetime: datetime.datetime = Field()
+    __tablename__ = "calendar_events"
+
+    id_ = Column(Uuid, primary_key=True, index=True)
+    create_datetime = Column(DateTime, default=now)
+    last_update_datetime = Column(DateTime, default=now, onupdate=now)
+    removed_datetime = Column(DateTime, default=None)
+
+    start_datetime = Column(String)
+    end_datetime = Column(String)
+
+    title = Column(String, default="Calendar Event Title")
+    description = Column(Text, default=None)

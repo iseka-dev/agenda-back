@@ -9,7 +9,7 @@ Classes
 import os
 
 from dotenv import load_dotenv
-from pydantic import BaseSettings
+from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
@@ -21,8 +21,7 @@ class Settings(BaseSettings):
 
     load_dotenv()
 
-    SQLITE_FILE_NAME = os.getenv("SQLITE_FILE_NAME", "")
-    SQLITE_URL = f"sqlite:///{SQLITE_FILE_NAME}"
+    SQLITE_URL: str = os.getenv("SQLITE_URL", "")
 
 
 settings = Settings()

@@ -9,7 +9,9 @@ packages = [{include = "agenda_back"}]
 [tool.poetry.dependencies]
 python = "^3.10"
 fastapi = "^0.100.0"
-sqlmodel = "^0.0.8"
+pydantic = "^2.1.1"
+sqlalchemy = "^2.0.19"
+pydantic-settings = "^2.0.2"
 
 [tool.poetry.group.dev.dependencies]
 python = "^3.10"

@@ -1,19 +1,35 @@
 """database implementation."""
 from collections.abc import Generator
 
-from sqlmodel import Session, SQLModel, create_engine
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 from agenda_back.common.config import settings
+from agenda_back.common.logger import log
 
-engine = create_engine(settings.SQLITE_URL, echo=True)
+engine = create_engine(
+    settings.SQLITE_URL,
+    connect_args={"check_same_thread": False},
+    echo=True
+)
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
 
 
 def db_init() -> None:
-    """Initialize db at server startup."""
-    SQLModel.metadata.create_all(engine)
+    """Initialize database."""
+    log.info("Initializing database...")
+    Base.metadata.create_all(bind=engine)
+    log.info("The database has been initialized.")
 
 
-def get_session() -> Generator:
-    """Yield a session. It commits after all the code was run."""
-    with Session(engine) as session:
-        yield session
+def get_db_session() -> Generator:
+    """Dependency to yield a session."""
+    db_session = SessionLocal()
+    try:
+        yield db_session
+    finally:
+        db_session.close()
