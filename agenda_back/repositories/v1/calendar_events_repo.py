@@ -9,13 +9,12 @@ from agenda_back.db.models import CalendarEvent
 from agenda_back.schemas.v1.common_schemas import IdResponse
 
 
-async def get_calendar_events(
+def get_calendar_events(
     session: Session,
     skip: int = 0,
     limit: int = 100
 ) -> list[CalendarEvent]:
     """Get list of calendar events from database."""
-    CalendarEvent.from_orm()
     calendar_events = session.query(
         CalendarEvent
     ).offset(skip).limit(limit).all()

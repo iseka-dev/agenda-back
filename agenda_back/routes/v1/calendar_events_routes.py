@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from agenda_back.common.logger import log
 from agenda_back.db.database import get_db_session
-from agenda_back.schemas.v1.calendar_event_schemas import CalendarEventBase
+from agenda_back.schemas.v1.calendar_event_schemas import CalendarEventSchema
 from agenda_back.schemas.v1.common_schemas import IdResponse
 from agenda_back.services.v1.calendar_events_service import (
     CalendarEventService,
@@ -18,10 +18,10 @@ calendar_events_routes = APIRouter(
 )
 
 
-@calendar_events_routes.get("/", response_model=CalendarEventBase)
-async def get_calendar_events(
+@calendar_events_routes.get("/", response_model=list[CalendarEventSchema])
+def get_calendar_events(
     db_session: Session = Depends(get_db_session)
-) -> CalendarEventBase:
+) -> list[CalendarEventSchema]:
     """Public route to get list of calendar events."""
     try:
         return CalendarEventService().get_calendar_events(
@@ -37,7 +37,7 @@ async def get_calendar_events(
 
 @calendar_events_routes.post("/", response_model=IdResponse)
 def create_calendar_event_route(
-    calendar_event: CalendarEventBase,
+    calendar_event: CalendarEventSchema,
     db_session: Session = Depends(get_db_session)
 ) -> IdResponse:
     """Public route to get list of calendar events."""
