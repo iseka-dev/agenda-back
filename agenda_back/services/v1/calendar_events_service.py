@@ -21,14 +21,12 @@ class CalendarEventService:
                 id_=event.id_,
                 start_datetime=event.start_datetime,
                 end_datetime=event.end_datetime,
-                description=event.description,
-                create_datetime=event.create_datetime,
-                last_update_datetime=event.last_update_datetime,
-                removed_datetime=event.removed_datetime
+                title=event.title,
+                description=event.description
             ) for event in calendar_events
         ]
 
-    def create_calendar_event_service(
+    def create_calendar_event(
         self, calendar_event: CalendarEventSchema, db_session: Session
     ) -> IdResponse:
         """Create a calendar event."""

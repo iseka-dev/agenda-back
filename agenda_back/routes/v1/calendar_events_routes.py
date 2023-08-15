@@ -18,7 +18,11 @@ calendar_events_routes = APIRouter(
 )
 
 
-@calendar_events_routes.get("/", response_model=list[CalendarEventSchema])
+@calendar_events_routes.get(
+    "/",
+    response_model=list[CalendarEventSchema],
+    status_code=status.HTTP_200_OK
+)
 def get_calendar_events(
     db_session: Session = Depends(get_db_session)
 ) -> list[CalendarEventSchema]:
@@ -35,7 +39,11 @@ def get_calendar_events(
     )
 
 
-@calendar_events_routes.post("/", response_model=IdResponse)
+@calendar_events_routes.post(
+    "/",
+    response_model=IdResponse,
+    status_code=status.HTTP_201_CREATED
+)
 def create_calendar_event_route(
     calendar_event: CalendarEventSchema,
     db_session: Session = Depends(get_db_session)
@@ -43,7 +51,7 @@ def create_calendar_event_route(
     """Public route to get list of calendar events."""
     try:
         return CalendarEventService(
-        ).create_calendar_event_service(calendar_event, db_session)
+        ).create_calendar_event(calendar_event, db_session)
     except Exception as e:
         log.error(f"Route Error: {e}")
         error = "[RCE01]: Event not created, please try again"

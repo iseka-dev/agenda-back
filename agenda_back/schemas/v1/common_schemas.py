@@ -2,15 +2,12 @@
 
 import uuid
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class IdResponse(BaseModel):
     """ID only response."""
 
+    model_config = ConfigDict(from_attributes=True)
+
     id_: uuid.UUID
-
-    class Config:
-        """Config class for IdResponse Schema."""
-
-        from_attributes = True

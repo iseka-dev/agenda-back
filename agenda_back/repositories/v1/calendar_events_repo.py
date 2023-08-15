@@ -27,13 +27,19 @@ def create_calendar_event_repo(
 ) -> IdResponse:
     """Create a Calendar Event Object in the db."""
     log.info(f"Creating Calendar Event: {calendar_event}")
+
     new_calendar_event = CalendarEvent(
         id_=uuid.uuid4(),
         start_datetime="2023-08-08T00:00:00",
         end_datetime="2023-08-08T12:00:00",
+        title="Calendar Event Title",
+        description="Some Calendar Event description"
     )
+
     session.add(new_calendar_event)
     session.commit()
     session.refresh(new_calendar_event)
+
     log.info(f"Calendar Event stored in database: {new_calendar_event}")
+
     return {"id_": new_calendar_event.id_}
