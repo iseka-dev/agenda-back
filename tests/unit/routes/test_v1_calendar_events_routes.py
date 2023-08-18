@@ -3,10 +3,14 @@
 from unittest.mock import MagicMock, patch
 
 from fastapi import status
+from fastapi.encoders import jsonable_encoder
 from fastapi.testclient import TestClient
 
 from agenda_back.common.logger import log
-from agenda_back.schemas.v1.calendar_event_schemas import CalendarEventSchema
+from agenda_back.schemas.v1.calendar_event_schemas import (
+    CalendarEventSchema,
+    CalendarEventsResponse,
+)
 from agenda_back.schemas.v1.common_schemas import IdResponse
 
 
@@ -36,14 +40,14 @@ def test_calendar_routes_get_calendar_events_exception(
 def test_calendar_routes_get_calendar_events_success(
     m_service: MagicMock,
     client: TestClient,
-    calendar_events_data: list[CalendarEventSchema]
+    calendar_events_data: CalendarEventsResponse
 ) -> None:
     """Test for home route."""
     m_service.return_value = calendar_events_data
     response = client.get("/v1/calendar-events/")
-
+    log.debug(calendar_events_data)
     assert response.status_code == status.HTTP_200_OK
-    assert response.json() == calendar_events_data
+    assert response.json() == jsonable_encoder(calendar_events_data)
 
 
 @patch(
@@ -51,23 +55,21 @@ def test_calendar_routes_get_calendar_events_success(
     "create_calendar_event"
 )
 def test_calendar_routes_create_calendar_event_exception(
-    m_service: MagicMock, client: TestClient
+    m_service: MagicMock,
+    client: TestClient,
+    calendar_event_creation_data: CalendarEventSchema
 ) -> None:
     """Test for create event route exception."""
     m_service.side_effect = Exception("Error")
-    response = client.post("/v1/calendar-events/")
+    response = client.post(
+        "/v1/calendar-events/", json=calendar_event_creation_data
+        )
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
     assert response.json() == {
-        "detail": [
-            {
-                "type": "missing",
-                "loc": ["body"],
-                "msg": "Field required",
-                "input": None,
-                "url": "https://errors.pydantic.dev/2.1/v/missing"
-            }
-        ]
+        "detail": {
+            "Error": "[RCE01]: An unexpected error happened. Please try again."
+        }
     }
 
 

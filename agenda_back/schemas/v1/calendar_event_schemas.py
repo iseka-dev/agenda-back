@@ -14,3 +14,9 @@ class CalendarEventSchema(BaseModel):
     end_datetime: str
     title: str = "Event Title"
     description: str | None = "Missing description"
+
+
+class CalendarEventsResponse(BaseModel):
+    """Schema with an only field that returns a list of CalendarEventSchema."""
+
+    calendar_events: list[CalendarEventSchema]
