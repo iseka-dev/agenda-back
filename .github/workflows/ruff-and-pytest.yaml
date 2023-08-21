@@ -22,8 +22,6 @@ jobs:
           poetry --version
       - name: Install dependencies
         run: |
-          poetry install
-          pip install ruff pytest pytest-cov pytest-custom-exit-code fastapi
           if [ -f ./pyproject.toml ]; then
             poetry install --with test;
           else
