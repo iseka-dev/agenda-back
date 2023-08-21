@@ -29,7 +29,7 @@ jobs:
           fi
       - name: Lint with ruff
         run: |
-          ruff check --format=github --target-version=py310 . --fix
+          poetry run ruff check --format=github --target-version=py310 . --fix
       - name: Test with pytest
         run: |
-          python -m pytest --suppress-no-test-exit-code --cov=server --cov-report term-missing:skip-covered -v
+          poetry run pytest --suppress-no-test-exit-code --cov=server --cov-report term-missing:skip-covered -v
