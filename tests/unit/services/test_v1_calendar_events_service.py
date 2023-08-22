@@ -53,8 +53,10 @@ def test_calendar_events_service_create_calendar_events_missing_arguments(
     session = MagicMock()
     with pytest.raises(Exception) as e:  # noqa: PT011
         CalendarEventService().create_calendar_event(
-            calendar_event="invalid payload",
             db_session=session
         )
 
-    assert str(e.value) == "'str' object has no attribute 'add'"
+    assert str(e.value) == (
+        "CalendarEventService.create_calendar_event() "
+        "missing 1 required positional argument: 'calendar_event'"
+    )
