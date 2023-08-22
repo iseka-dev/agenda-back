@@ -16,8 +16,7 @@ class CalendarEventService:
         self, db_session: Session
     ) -> CalendarEventsResponse:
         """Get list of Calendar Events."""
-        calendar_events = calendar_events_repo.get_calendar_events(db_session)
-        return CalendarEventsResponse(calendar_events=calendar_events)
+        return calendar_events_repo.get_calendar_events(db_session)
 
     def create_calendar_event(
         self, calendar_event: CalendarEventSchema, db_session: Session

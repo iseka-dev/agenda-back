@@ -6,6 +6,9 @@ from sqlalchemy.orm import Session
 
 from agenda_back.common.logger import log
 from agenda_back.db.models import CalendarEvent
+from agenda_back.schemas.v1.calendar_event_schemas import (
+    CalendarEventsResponse,
+)
 from agenda_back.schemas.v1.common_schemas import IdResponse
 
 
@@ -18,7 +21,7 @@ def get_calendar_events(
     calendar_events = session.query(
         CalendarEvent
     ).offset(skip).limit(limit).all()
-    return calendar_events
+    return CalendarEventsResponse(calendar_events=calendar_events)
 
 
 def create_calendar_event_repo(
