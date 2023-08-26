@@ -57,12 +57,12 @@ def test_calendar_routes_get_calendar_events_success(
 def test_calendar_routes_create_calendar_event_exception(
     m_service: MagicMock,
     client: TestClient,
-    calendar_event_creation_data: CalendarEventSchema
+    calendar_event_create_data: CalendarEventSchema
 ) -> None:
     """Test for create event route exception."""
     m_service.side_effect = Exception("Error")
     response = client.post(
-        "/v1/calendar-events/", json=calendar_event_creation_data
+        "/v1/calendar-events/", json=calendar_event_create_data
         )
 
     assert response.status_code == status.HTTP_422_UNPROCESSABLE_ENTITY
@@ -80,14 +80,14 @@ def test_calendar_routes_create_calendar_event_exception(
 def test_calendar_routes_create_calendar_event_success(
     m_service: MagicMock,
     client: TestClient,
-    calendar_event_creation_data: CalendarEventSchema,
+    calendar_event_create_data: CalendarEventSchema,
     id_uuid_data: IdResponse
 ) -> None:
     """Test for Create Calendar Event route."""
     m_service.return_value = id_uuid_data
     response = client.post(
         "/v1/calendar-events/",
-        json=calendar_event_creation_data
+        json=calendar_event_create_data
     )
     log.debug(f"{response.json()}")
     assert response.status_code == status.HTTP_201_CREATED

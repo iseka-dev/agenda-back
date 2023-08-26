@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from agenda_back.common.logger import log
 from agenda_back.db.database import get_db_session
 from agenda_back.schemas.v1.calendar_event_schemas import (
-    CalendarEventSchema,
+    CalendarEventCreateRequest,
     CalendarEventsResponse,
 )
 from agenda_back.schemas.v1.common_schemas import IdResponse
@@ -48,7 +48,7 @@ def get_calendar_events(
     status_code=status.HTTP_201_CREATED
 )
 def create_calendar_event(
-    calendar_event: CalendarEventSchema,
+    calendar_event: CalendarEventCreateRequest,
     db_session: Session = Depends(get_db_session)
 ) -> IdResponse:
     """Public route to get list of calendar events."""

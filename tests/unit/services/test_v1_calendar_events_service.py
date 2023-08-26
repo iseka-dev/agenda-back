@@ -2,8 +2,10 @@
 """Tests for calendar events service."""
 from unittest.mock import MagicMock, patch
 
-import pytest
-
+from agenda_back.schemas.v1.calendar_event_schemas import (
+    CalendarEventCreateRequest,
+)
+from agenda_back.schemas.v1.common_schemas import IdResponse
 from agenda_back.services.v1.calendar_events_service import (
     CalendarEventService,
 )
@@ -43,20 +45,23 @@ def test_calendar_events_service_get_calendar_events_success(
     assert result == calendar_events_data
 
 
-def test_calendar_events_service_create_calendar_events_missing_arguments(
+@patch(
+    "agenda_back.repositories.v1.calendar_events_repo.create_calendar_event"
+)
+def test_calendar_events_service_create_calendar_events_success(
+    mocked_repo: MagicMock,
+    id_uuid_data: IdResponse,
+    calendar_event_create_data: CalendarEventCreateRequest
 ) -> None:
     """
     Test for get_calendar_events method at Calendar Event service.
 
-    Empty response success case.
+    Success case.
     """
-    session = MagicMock()
-    with pytest.raises(Exception) as e:  # noqa: PT011
-        CalendarEventService().create_calendar_event(
-            db_session=session
-        )
-
-    assert str(e.value) == (
-        "CalendarEventService.create_calendar_event() "
-        "missing 1 required positional argument: 'calendar_event'"
+    mocked_repo.return_value = id_uuid_data
+    session = MagicMock
+    result = CalendarEventService().create_calendar_event(
+        calendar_event_create_data, session
     )
+
+    assert result == id_uuid_data

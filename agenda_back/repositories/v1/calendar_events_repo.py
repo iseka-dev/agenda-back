@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from agenda_back.common.logger import log
 from agenda_back.db.models import CalendarEvent
 from agenda_back.schemas.v1.calendar_event_schemas import (
+    CalendarEventCreateRequest,
     CalendarEventsResponse,
 )
 from agenda_back.schemas.v1.common_schemas import IdResponse
@@ -24,25 +25,21 @@ def get_calendar_events(
     return CalendarEventsResponse(calendar_events=calendar_events)
 
 
-def create_calendar_event_repo(
-    calendar_event: CalendarEvent,
+def create_calendar_event(
+    calendar_event: CalendarEventCreateRequest,
     session: Session
 ) -> IdResponse:
     """Create a Calendar Event Object in the db."""
-    log.info(f"Creating Calendar Event: {calendar_event}")
-
-    new_calendar_event = CalendarEvent(
+    calendar_event = CalendarEvent(
         id_=uuid.uuid4(),
-        start_datetime="2023-08-08T00:00:00",
-        end_datetime="2023-08-08T12:00:00",
-        title="Calendar Event Title",
-        description="Some Calendar Event description"
+        start_datetime=calendar_event.start_datetime,
+        end_datetime=calendar_event.end_datetime,
+        title=calendar_event.title,
+        description=calendar_event.description
     )
 
-    session.add(new_calendar_event)
-    session.commit()
-    session.refresh(new_calendar_event)
+    session.add(calendar_event)
 
-    log.info(f"Calendar Event stored in database: {new_calendar_event}")
+    log.info(f"Calendar Event stored in database: {calendar_event}")
 
-    return {"id_": new_calendar_event.id_}
+    return IdResponse(id_=calendar_event.id_)
