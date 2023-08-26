@@ -22,16 +22,16 @@ jobs:
           poetry --version
       - name: Install dependencies
         run: |
-          poetry install
-          pip install ruff pytest pytest-cov pytest-custom-exit-code
           if [ -f ./pyproject.toml ]; then
-            poetry install --with dev;
+            poetry install --with test;
           else
             echo "No pyproject.toml file or no dev dependencies"
           fi
       - name: Lint with ruff
         run: |
-          ruff check --format=github --target-version=py310 . --fix
+          poetry run ruff check --format=github --target-version=py310 . --fix
       - name: Test with pytest
         run: |
-          python -m pytest --suppress-no-test-exit-code --cov=server --cov-report term-missing:skip-covered -v
+          poetry run pytest --suppress-no-test-exit-code --cov=server --cov-report term-missing:skip-covered -v
+        env:
+          SQLITE_URL: "sqlite:///./tests_database.db"
