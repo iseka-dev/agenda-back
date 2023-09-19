@@ -1,4 +1,5 @@
 """routes to access to the calendar events."""
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -14,6 +15,7 @@ from agenda_back.schemas.v1.common_schemas import (
     IdOnlyResponse,
     PaginationSchema,
 )
+
 from agenda_back.services.v1.calendar_events_service import (
     CalendarEventService,
 )
@@ -72,6 +74,7 @@ def get_calendar_event(
 @calendar_events_routes.post(
     "/",
     response_model=IdOnlyResponse,
+
     status_code=status.HTTP_201_CREATED
 )
 def create_calendar_event(
