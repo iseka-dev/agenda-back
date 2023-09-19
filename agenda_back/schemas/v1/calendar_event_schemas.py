@@ -17,11 +17,11 @@ class CalendarEventSchema(BaseModel):
     description: str | None = "Missing description"
 
 
-class CalendarEventsResponse(BaseModel):
+class CalendarEventsPaginatedResponse(BaseModel):
     """Schema with an only field that returns a list of CalendarEventSchema."""
 
     calendar_events: list[CalendarEventSchema]
-
+    total_count: int
 
 class CalendarEventCreateRequest(BaseModel):
     """Base Schema Class for Calendar Events."""

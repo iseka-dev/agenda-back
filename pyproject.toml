@@ -50,6 +50,7 @@ ignore = [
   "COM812",
   "RET504",
   "B008",
+  "E266"
 ]
 
 # Allow autofix for all enabled rules (when `--fix`) is provided.

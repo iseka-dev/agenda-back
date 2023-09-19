@@ -9,9 +9,13 @@ from fastapi.testclient import TestClient
 from agenda_back.common.logger import log
 from agenda_back.schemas.v1.calendar_event_schemas import (
     CalendarEventSchema,
-    CalendarEventsResponse,
+    CalendarEventsPaginatedResponse,
 )
-from agenda_back.schemas.v1.common_schemas import IdResponse
+from agenda_back.schemas.v1.common_schemas import IdOnlyResponse
+
+###########################################################
+### GET ALL CALENDAR EVENTS TESTS                  ########
+###########################################################
 
 
 @patch(
@@ -21,9 +25,9 @@ from agenda_back.schemas.v1.common_schemas import IdResponse
 def test_calendar_routes_get_calendar_events_exception(
     m_service: MagicMock, client: TestClient
 ) -> None:
-    """Test for home route."""
+    """Test for  GET method get_calendar_events. Exception."""
     m_service.side_effect = Exception("error")
-    response = client.get("/v1/calendar-events/")
+    response = client.get("/v1/calendar-events/?offset=10")
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
     assert response.json() == {
@@ -40,14 +44,71 @@ def test_calendar_routes_get_calendar_events_exception(
 def test_calendar_routes_get_calendar_events_success(
     m_service: MagicMock,
     client: TestClient,
-    calendar_events_data: CalendarEventsResponse
+    calendar_events_data: CalendarEventsPaginatedResponse
 ) -> None:
-    """Test for home route."""
+    """Test for  GET method get_calendar_events. Success."""
     m_service.return_value = calendar_events_data
     response = client.get("/v1/calendar-events/")
     log.debug(calendar_events_data)
-    assert response.status_code == status.HTTP_200_OK
+    assert response.status_code == status.HTTP_302_FOUND
     assert response.json() == jsonable_encoder(calendar_events_data)
+
+
+###########################################################
+### GET CALENDAR EVENTS BY ID TESTS                #########
+###########################################################
+
+
+@patch(
+    "agenda_back.services.v1.calendar_events_service.CalendarEventService."
+    "get_calendar_event",
+)
+def test_calendar_routes_get_calendar_event_exception(
+    m_service: MagicMock, client: TestClient
+) -> None:
+    """Test GET calendar event by id. Throws error."""
+    m_service.side_effect = Exception("error")
+    response = client.get(
+        "/v1/calendar-events/832e350f-2689-4e02-83eb-c6e34b15885d"
+    )
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+    assert response.json() == {
+        "detail": {
+            "Error": "Calendar was not found. Please try again."
+        }
+    }
+
+
+@patch(
+    "agenda_back.services.v1.calendar_events_service.CalendarEventService."
+    "get_calendar_event",
+)
+def test_calendar_routes_get_calendar_event_success(
+    m_service: MagicMock,
+    client: TestClient,
+    calendar_event: CalendarEventSchema,
+    id_uuid_string: str
+) -> None:
+    """Test GET calendar event by id. Throws error."""
+    m_service.return_value = calendar_event
+    response = client.get(
+       f"/v1/calendar-events/{id_uuid_string}"
+    )
+    assert response.status_code == status.HTTP_302_FOUND
+    log.debug(response.json())
+    assert response.json() == {
+        "id_": "a0866e45-9dd6-4874-b4b2-74efd20e5761",
+        "start_datetime": "1970-01-01T00:33:43Z",
+        "end_datetime": "1970-01-01T00:33:43Z",
+        "title": "Some Title",
+        "description": "Some not necessary description"
+    }
+
+
+
+###########################################################
+### CREATE CALENDAR EVENTS TESTS                  #########
+###########################################################
 
 
 @patch(
@@ -81,7 +142,7 @@ def test_calendar_routes_create_calendar_event_success(
     m_service: MagicMock,
     client: TestClient,
     calendar_event_create_data: CalendarEventSchema,
-    id_uuid_data: IdResponse
+    id_uuid_data: IdOnlyResponse
 ) -> None:
     """Test for Create Calendar Event route."""
     m_service.return_value = id_uuid_data
