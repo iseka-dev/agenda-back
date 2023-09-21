@@ -1,0 +1,37 @@
+name: Python package
+
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10"]
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        run: |
+          pipx install poetry
+          poetry --version
+      - name: Install dependencies
+        run: |
+          if [ -f ./pyproject.toml ]; then
+            poetry install --with test;
+          else
+            echo "No pyproject.toml file or no dev dependencies"
+          fi
+      - name: Lint with ruff
+        run: |
+          poetry run ruff check --format=github --target-version=py310 . --fix
+      - name: Test with pytest
+        run: |
+          poetry run pytest --suppress-no-test-exit-code --cov=server --cov-report term-missing:skip-covered -v
+        env:
+          SQLITE_URL: "sqlite:///./tests_database.db"
