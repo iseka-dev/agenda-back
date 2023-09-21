@@ -17,19 +17,21 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install Poetry
-        run: |
+        run:
           pipx install poetry
           poetry --version
       - name: Install dependencies
-        run: |
+        run:
           if [ -f ./pyproject.toml ]; then
             poetry install --with test;
           else
             echo "No pyproject.toml file or no dev dependencies"
           fi
       - name: Lint with ruff
-        run: |
+        run:
           poetry run ruff check --format=github --target-version=py310 . --fix
       - name: Test with pytest
-        run: |
+        run:
           poetry run pytest --suppress-no-test-exit-code --cov=server --cov-report term-missing:skip-covered -v
+        env:
+          SQLITE_URL: "sqlite:///./tests_database.db"
