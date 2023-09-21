@@ -10,13 +10,16 @@ from pydantic import (
     field_validator,
 )
 
+from agenda_back.common.config import settings
+from agenda_back.common.enums import Orderby
+
 
 class IdOnlyResponse(BaseModel):
     """ID only response schema."""
 
     model_config = ConfigDict(from_attributes=True)
 
-    id_: uuid.UUID
+    id: uuid.UUID
 
 
 class PaginationSchema(BaseModel):
@@ -33,7 +36,7 @@ class PaginationSchema(BaseModel):
 
     offset: int = 0
     limit: int = 10
-    sort: str = "id_"
+    sort: str = "id"
     order: str = "asc"
 
     @field_validator("*", mode="before")
@@ -43,5 +46,20 @@ class PaginationSchema(BaseModel):
     ) -> Callable:
         """Use default value if none."""
         if v is None:
-            return cls.model_config["json_schema_extra"][f"{field.field_name}"]
+            return cls.model_fields[f"{field.field_name}"].default
         return v
+
+    @property
+    def order_by(self) -> Orderby:
+        """Order query results by selected field."""
+        return Orderby.ASC if self.order.lower() == "asc" else Orderby.DESC
+
+    @property
+    def limit_page(self) -> int:
+        """Set a maximum imit for an amount of item per page."""
+        self.limit = (
+            settings.PAGE_LIMIT
+            if self.limit > settings.PAGE_LIMIT
+            else self.limit
+        )
+        return self.limit

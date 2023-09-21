@@ -23,5 +23,7 @@ class Settings(BaseSettings):
 
     SQLITE_URL: str = os.getenv("SQLITE_URL", "")
 
+    PAGE_LIMIT: int = os.getenv("PAGE_LIMIT", "100")
+
 
 settings = Settings()

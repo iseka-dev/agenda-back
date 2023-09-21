@@ -10,7 +10,7 @@ class CalendarEventSchema(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id_: uuid.UUID
+    id: uuid.UUID
     start_datetime: datetime.datetime
     end_datetime: datetime.datetime
     title: str = "Event Title"

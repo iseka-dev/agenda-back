@@ -23,7 +23,7 @@ def client() -> TestClient:
 @pytest.fixture()
 def calendar_event() -> CalendarEventSchema:
     return CalendarEventSchema(
-        id_="a0866e45-9dd6-4874-b4b2-74efd20e5761",
+        id="a0866e45-9dd6-4874-b4b2-74efd20e5761",
         start_datetime="2023",
         end_datetime="2023",
         title="Some Title",
@@ -35,7 +35,7 @@ def calendar_event() -> CalendarEventSchema:
 def calendar_events_data() -> CalendarEventsPaginatedResponse:
     return CalendarEventsPaginatedResponse(
         calendar_events=[{
-            "id_": "a0866e45-9dd6-4874-b4b2-74efd20e5761",
+            "id": "a0866e45-9dd6-4874-b4b2-74efd20e5761",
             "start_datetime": "2023",
             "end_datetime": "2023",
             "title": "Event Title",
@@ -57,7 +57,7 @@ def calendar_event_create_data() -> CalendarEventCreateRequest:
 
 @pytest.fixture()
 def id_uuid_data() -> IdOnlyResponse:
-    return IdOnlyResponse(id_="a0866e45-9dd6-4874-b4b2-74efd20e5761")
+    return IdOnlyResponse(id="a0866e45-9dd6-4874-b4b2-74efd20e5761")
 
 
 @pytest.fixture()

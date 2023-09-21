@@ -50,7 +50,7 @@ def test_calendar_routes_get_calendar_events_success(
     m_service.return_value = calendar_events_data
     response = client.get("/v1/calendar-events/")
     log.debug(calendar_events_data)
-    assert response.status_code == status.HTTP_302_FOUND
+    assert response.status_code == status.HTTP_200_OK
     assert response.json() == jsonable_encoder(calendar_events_data)
 
 
@@ -94,10 +94,10 @@ def test_calendar_routes_get_calendar_event_success(
     response = client.get(
        f"/v1/calendar-events/{id_uuid_string}"
     )
-    assert response.status_code == status.HTTP_302_FOUND
+    assert response.status_code == status.HTTP_200_OK
     log.debug(response.json())
     assert response.json() == {
-        "id_": "a0866e45-9dd6-4874-b4b2-74efd20e5761",
+        "id": "a0866e45-9dd6-4874-b4b2-74efd20e5761",
         "start_datetime": "1970-01-01T00:33:43Z",
         "end_datetime": "1970-01-01T00:33:43Z",
         "title": "Some Title",
@@ -152,4 +152,4 @@ def test_calendar_routes_create_calendar_event_success(
     )
     log.debug(f"{response.json()}")
     assert response.status_code == status.HTTP_201_CREATED
-    assert response.json() == {"id_": "a0866e45-9dd6-4874-b4b2-74efd20e5761"}
+    assert response.json() == {"id": "a0866e45-9dd6-4874-b4b2-74efd20e5761"}

@@ -15,7 +15,7 @@ class CalendarEvent(Base):
 
     __tablename__ = "calendar_events"
 
-    id_ = Column(
+    id = Column(
         Text,
         primary_key=True,
         index=True,
