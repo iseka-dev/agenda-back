@@ -39,12 +39,12 @@ def get_calendar_event(
     session: Session
 ) -> CalendarEventSchema:
     """Get list of calendar events from database."""
-    query = select(CalendarEvent).where(CalendarEvent.id_ == calendar_event_id)
+    query = select(CalendarEvent).where(CalendarEvent.id == calendar_event_id)
     calendar_event = session.scalar(
         query
     )
     return CalendarEventSchema(
-        id_=calendar_event.id_,
+        id=calendar_event.id,
         start_datetime=calendar_event.start_datetime,
         end_datetime=calendar_event.end_datetime,
         title=calendar_event.title,
@@ -58,7 +58,7 @@ def create_calendar_event(
 ) -> IdOnlyResponse:
     """Create a Calendar Event Object in the db."""
     calendar_event = CalendarEvent(
-        id_=str(uuid.uuid4()),
+        id=str(uuid.uuid4()),
         start_datetime=calendar_event.start_datetime,
         end_datetime=calendar_event.end_datetime,
         title=calendar_event.title,
@@ -71,4 +71,4 @@ def create_calendar_event(
 
     log.info(f"Calendar Event stored in database: {calendar_event}")
 
-    return IdOnlyResponse(id_=calendar_event.id_)
+    return IdOnlyResponse(id=calendar_event.id)

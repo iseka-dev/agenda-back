@@ -33,5 +33,3 @@ jobs:
       - name: Test with pytest
         run: |
           poetry run pytest --suppress-no-test-exit-code --cov=server --cov-report term-missing:skip-covered -v
-        env:
-          SQLITE_URL: "sqlite:///./tests_database.db"
