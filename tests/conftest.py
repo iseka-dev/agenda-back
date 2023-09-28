@@ -10,6 +10,7 @@ from agenda_back.schemas.v1.calendar_event_schemas import (
     CalendarEventsPaginatedResponse,
 )
 from agenda_back.schemas.v1.common_schemas import IdOnlyResponse
+from agenda_back.schemas.v1.user_schemas import UserSchema
 
 client = TestClient(app)
 
@@ -27,7 +28,19 @@ def calendar_event() -> CalendarEventSchema:
         start_datetime="2023",
         end_datetime="2023",
         title="Some Title",
-        description="Some not necessary description"
+        description="Some not necessary description",
+        owner=UserSchema(
+            id="a0866e45-9dd6-4874-b4b2-74efd20e5872",
+            email="some_email@mail.com",
+            first_name="Juan",
+            last_name="Perez"
+        ),
+        attendees=[UserSchema(
+            id="a0866e45-9dd6-4874-b4b2-74efd20e5872",
+            email="some_email@mail.com",
+            first_name="Juan",
+            last_name="Perez"
+        )]
     )
 
 

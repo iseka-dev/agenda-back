@@ -78,7 +78,7 @@ def create_calendar_event(
     calendar_event: CalendarEventCreateRequest,
     db_session: Session = Depends(get_db_session)
 ) -> IdOnlyResponse:
-    """Public route to get list of calendar events."""
+    """Create calendar event."""
     try:
         return CalendarEventService(
         ).create_calendar_event(calendar_event, db_session)

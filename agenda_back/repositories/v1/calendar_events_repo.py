@@ -1,12 +1,12 @@
 """Repository to query Calendar Events in postgres db."""
 
-import uuid
+from uuid import uuid4
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from agenda_back.common.logger import log
-from agenda_back.db.models import CalendarEvent
+from agenda_back.db.models.calendar_event_models import CalendarEvent
 from agenda_back.schemas.v1.calendar_event_schemas import (
     CalendarEventCreateRequest,
     CalendarEventSchema,
@@ -25,9 +25,9 @@ def get_calendar_events(
     """Get list of calendar events from database."""
     calendar_events = session.query(
         CalendarEvent
-    ).offset(pagination.offset).limit(pagination.limit).order_by(
+    ).order_by(
         pagination.order_by(pagination.sort)
-    ).all()
+    ).offset(pagination.offset).limit(pagination.limit).all()
     return CalendarEventsPaginatedResponse(
         calendar_events=calendar_events,
         total_count=len(calendar_events)
@@ -58,11 +58,13 @@ def create_calendar_event(
 ) -> IdOnlyResponse:
     """Create a Calendar Event Object in the db."""
     calendar_event = CalendarEvent(
-        id=str(uuid.uuid4()),
+        id=str(uuid4()),
         start_datetime=calendar_event.start_datetime,
         end_datetime=calendar_event.end_datetime,
         title=calendar_event.title,
-        description=calendar_event.description
+        description=calendar_event.description,
+        owner=calendar_event.owner,
+        attendees=[]
     )
 
     session.add(calendar_event)
