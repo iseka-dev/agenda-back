@@ -1,6 +1,5 @@
 """Repository to query Calendar Events in postgres db."""
 
-from uuid import uuid4
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -8,7 +7,6 @@ from sqlalchemy.orm import Session
 from agenda_back.common.logger import log
 from agenda_back.db.models.calendar_event_models import CalendarEvent
 from agenda_back.schemas.v1.calendar_event_schemas import (
-    CalendarEventCreateRequest,
     CalendarEventSchema,
     CalendarEventsPaginatedResponse,
 )
@@ -48,23 +46,23 @@ def get_calendar_event(
         start_datetime=calendar_event.start_datetime,
         end_datetime=calendar_event.end_datetime,
         title=calendar_event.title,
-        description=calendar_event.description
+        description=calendar_event.description,
+        owner_id=calendar_event.owner_id,
+        attendee_ids=calendar_event.attendee_ids,
     )
 
 
 def create_calendar_event(
-    calendar_event: CalendarEventCreateRequest,
+    calendar_event: CalendarEventSchema,
     session: Session
 ) -> IdOnlyResponse:
     """Create a Calendar Event Object in the db."""
     calendar_event = CalendarEvent(
-        id=str(uuid4()),
+        id=str(calendar_event.id),
         start_datetime=calendar_event.start_datetime,
         end_datetime=calendar_event.end_datetime,
         title=calendar_event.title,
-        description=calendar_event.description,
-        owner=calendar_event.owner,
-        attendees=[]
+        owner_id=str(calendar_event.owner_id),
     )
 
     session.add(calendar_event)

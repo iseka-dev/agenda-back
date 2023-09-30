@@ -18,7 +18,7 @@ class User(Base):
         Text,
         primary_key=True,
         index=True,
-        default=uuid4,
+        default=uuid4(),
     )
 
     username: Mapped[str] = mapped_column(
@@ -28,11 +28,6 @@ class User(Base):
     )
     password: Mapped[str] = mapped_column(
         String(255),
-        nullable=True
-    )
-    token_account_update: Mapped[str] = mapped_column(
-        Text(),
-        unique=True,
         nullable=True
     )
 

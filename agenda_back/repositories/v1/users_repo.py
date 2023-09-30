@@ -18,21 +18,21 @@ def create_user(
     user: UserSchema,
     session: Session
 ) -> IdOnlyResponse:
-    """Create a Calendar Event Object in the db."""
+    """Create a User Object the db."""
     user = User(
         id=str(uuid4()),
-        start_datetime=user.start_datetime,
-        end_datetime=user.end_datetime,
-        title=user.title,
-        description=user.description,
-        owner=user.owner,
-        attendees=[]
+        username=user.username,
+        email=user.email,
+        password=user.password,
+        first_name=user.first_name,
+        second_name=user.second_name,
+        last_name=user.last_name,
     )
 
     session.add(user)
     session.commit()
     session.refresh(user)
 
-    log.info(f"Calendar Event stored in database: {user}")
+    log.info(f"User stored in database: {user}")
 
     return IdOnlyResponse(id=user.id)

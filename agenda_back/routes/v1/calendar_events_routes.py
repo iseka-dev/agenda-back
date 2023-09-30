@@ -24,6 +24,30 @@ calendar_events_routes = APIRouter(
 )
 
 
+@calendar_events_routes.post(
+    "/",
+    response_model=IdOnlyResponse,
+    status_code=status.HTTP_201_CREATED
+)
+def create_calendar_event(
+    calendar_event: CalendarEventCreateRequest,
+    db_session: Session = Depends(get_db_session)
+) -> IdOnlyResponse:
+    """Create calendar event."""
+    try:
+        return CalendarEventService().create_calendar_event(
+            calendar_event,
+            db_session
+        )
+    except Exception as e:
+        log.error(f"Route Error: {e}")
+        error = "[Error]: An unexpected error happened. Please try again."
+    raise HTTPException(
+        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+        detail={"Error": error},
+    )
+
+
 @calendar_events_routes.get(
     "/",
     response_model=CalendarEventsPaginatedResponse,
@@ -54,7 +78,7 @@ def get_calendar_events(
 def get_calendar_event(
     calendar_event_id: str,
     db_session: Session = Depends(get_db_session)
-) -> CalendarEventsPaginatedResponse:
+) -> CalendarEventSchema:
     """Public route to get list of calendar events."""
     try:
         return CalendarEventService().get_calendar_event(
@@ -65,27 +89,5 @@ def get_calendar_event(
         log.error(f"Route Error: {e}")
     raise HTTPException(
         status_code=status.HTTP_404_NOT_FOUND,
-        detail={"Error": "Calendar was not found. Please try again."},
-    )
-
-
-@calendar_events_routes.post(
-    "/",
-    response_model=IdOnlyResponse,
-    status_code=status.HTTP_201_CREATED
-)
-def create_calendar_event(
-    calendar_event: CalendarEventCreateRequest,
-    db_session: Session = Depends(get_db_session)
-) -> IdOnlyResponse:
-    """Create calendar event."""
-    try:
-        return CalendarEventService(
-        ).create_calendar_event(calendar_event, db_session)
-    except Exception as e:
-        log.error(f"Route Error: {e}")
-        error = "[RCE01]: An unexpected error happened. Please try again."
-    raise HTTPException(
-        status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        detail={"Error": error},
+        detail={"Error": "Calendar event was not found. Please try again."},
     )

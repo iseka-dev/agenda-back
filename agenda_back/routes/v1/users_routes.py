@@ -1,7 +1,8 @@
 """Routes to the users api."""
 
+from sqlite3 import IntegrityError
+
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from agenda_back.common.logger import log
@@ -19,13 +20,13 @@ users_routes = APIRouter(
     "/",
     status_code=status.HTTP_201_CREATED,
 )
-async def create(
+def create(
     data: CreateUserRequestSchema,
     db_session: Session = Depends(get_db_session),
 ) -> IdOnlyResponse:
     """Create user."""
     try:
-        return await UserService(data, db_session).create(data)
+        return UserService().create(data, db_session)
     except IntegrityError:
         error = "Users Error: The email address was already taken."
     except Exception as e:
@@ -33,5 +34,5 @@ async def create(
         error = "Users Error: User was not created, please try again."
     raise HTTPException(
         status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-        detail={"error": error},
+        detail={"Error": error},
     )

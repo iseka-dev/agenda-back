@@ -15,8 +15,8 @@ class CalendarEventSchema(BaseModel):
     end_datetime: datetime
     title: str = "Event Title"
     description: str | None = "Missing description"
-    owner: UUID
-    attendees: UUID
+    owner_id: UUID
+    attendee_ids: list[UUID] | None = None
 
 
 class CalendarEventsPaginatedResponse(BaseModel):
@@ -28,11 +28,8 @@ class CalendarEventsPaginatedResponse(BaseModel):
 class CalendarEventCreateRequest(BaseModel):
     """Base Schema Class for Calendar Events."""
 
-    model_config = ConfigDict(from_attributes=True)
-
     start_datetime: datetime
     end_datetime: datetime
     title: str = "Event Title"
     description: str | None = "Missing description"
-    owner: UUID
-    attendees: list[UUID]
+    attendee_ids: list[UUID] = []

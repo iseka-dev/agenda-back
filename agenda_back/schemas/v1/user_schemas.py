@@ -15,6 +15,10 @@ class CreateUserRequestSchema(BaseModel):
 
     username: str
     password: str
+    email: str
+    first_name: str
+    second_name: str | None = None
+    last_name: str
 
 class UserSchema(BaseModel):
     """Base Schema Class for Users."""
@@ -22,7 +26,9 @@ class UserSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: UUID
+    username: str
+    password: str
     email: str
     first_name: str
-    second_name: str | None
+    second_name: str | None = None
     last_name: str
