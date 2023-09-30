@@ -72,7 +72,7 @@ def test_calendar_events_service_get_calendar_event_success(
 def test_calendar_events_service_create_calendar_events_success(
     mocked_repo: MagicMock,
     id_uuid_data: IdOnlyResponse,
-    calendar_event_create_data: CalendarEventCreateRequest
+    calendar_event_create_schema: CalendarEventCreateRequest
 ) -> None:
     """
     Test for get_calendar_events method at Calendar Event service.
@@ -82,7 +82,7 @@ def test_calendar_events_service_create_calendar_events_success(
     mocked_repo.return_value = id_uuid_data
     session = MagicMock
     result = CalendarEventService().create_calendar_event(
-        calendar_event_create_data, session
+        calendar_event_create_schema, session
     )
 
     assert result == id_uuid_data

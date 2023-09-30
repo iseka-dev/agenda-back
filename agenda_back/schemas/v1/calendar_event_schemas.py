@@ -1,6 +1,6 @@
 """This module has Calendar Events reladted schemas for type validation."""
-import datetime
-import uuid
+from datetime import datetime
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
 
@@ -10,11 +10,13 @@ class CalendarEventSchema(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: uuid.UUID
-    start_datetime: datetime.datetime
-    end_datetime: datetime.datetime
+    id: UUID
+    start_datetime: datetime
+    end_datetime: datetime
     title: str = "Event Title"
     description: str | None = "Missing description"
+    owner_id: UUID
+    attendee_ids: list[UUID] | None = None
 
 
 class CalendarEventsPaginatedResponse(BaseModel):
@@ -26,9 +28,8 @@ class CalendarEventsPaginatedResponse(BaseModel):
 class CalendarEventCreateRequest(BaseModel):
     """Base Schema Class for Calendar Events."""
 
-    model_config = ConfigDict(from_attributes=True)
-
-    start_datetime: datetime.datetime
-    end_datetime: datetime.datetime
+    start_datetime: datetime
+    end_datetime: datetime
     title: str = "Event Title"
     description: str | None = "Missing description"
+    attendee_ids: list[UUID] = []

@@ -1,7 +1,7 @@
 """This module has common schemas for type validation."""
 
-import uuid
 from collections.abc import Callable
+from uuid import UUID
 
 from pydantic import (
     BaseModel,
@@ -19,7 +19,7 @@ class IdOnlyResponse(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
-    id: uuid.UUID
+    id: UUID
 
 
 class PaginationSchema(BaseModel):

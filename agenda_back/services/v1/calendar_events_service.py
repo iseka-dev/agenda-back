@@ -1,4 +1,6 @@
 """Service to handle calendar events."""
+from uuid import UUID, uuid4
+
 from sqlalchemy.orm import Session
 
 from agenda_back.repositories.v1 import calendar_events_repo
@@ -34,6 +36,14 @@ class CalendarEventService:
         self, calendar_event: CalendarEventCreateRequest, db_session: Session
     ) -> IdOnlyResponse:
         """Create a calendar event."""
+        calendar_event_data = calendar_event.model_dump()
+        calendar_event_data["id"] = uuid4()
+        calendar_event_data["owner_id"] = UUID(
+            "d0bbb548-3faa-4ce1-9823-c9ab8df1ec06"
+        )
+        calendar_event_data = CalendarEventSchema(
+            **calendar_event_data
+        )
         return calendar_events_repo.create_calendar_event(
-            calendar_event, db_session
+            calendar_event_data, db_session
         )
