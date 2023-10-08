@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 
 from sqlalchemy.orm import Session
 
-from agenda_back.repositories.v1 import users_repo
+from agenda_back.repositories import users_repo
 from agenda_back.schemas.v1.common_schemas import IdOnlyResponse
 from agenda_back.schemas.v1.user_schemas import (
     CreateUserRequestSchema,

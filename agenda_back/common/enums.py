@@ -27,3 +27,12 @@ class Orderby(Enum):
 
     ASC = asc
     DESC = desc
+
+
+class TokenTypes(BaseEnum):
+    """Token Types for Json Web Token authentication."""
+
+    AUTH = "auth"
+    REFRESH = "refresh"
+    PASSWORD_CREATE = "password_create"  # noqa: S105
+    PASSWORD_RESET = "password_reset"  # noqa: S105

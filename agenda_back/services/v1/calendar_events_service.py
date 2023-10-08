@@ -3,7 +3,7 @@ from uuid import UUID, uuid4
 
 from sqlalchemy.orm import Session
 
-from agenda_back.repositories.v1 import calendar_events_repo
+from agenda_back.repositories import calendar_events_repo
 from agenda_back.schemas.v1.calendar_event_schemas import (
     CalendarEventCreateRequest,
     CalendarEventSchema,

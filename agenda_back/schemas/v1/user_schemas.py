@@ -11,14 +11,27 @@ from pydantic import (
 class CreateUserRequestSchema(BaseModel):
     """Base Schema Class for Users."""
 
-    model_config = ConfigDict(from_attributes=True)
-
     username: str
     password: str
     email: str
     first_name: str
     second_name: str | None = None
     last_name: str
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "username": "admin",
+                    "password": "admin123123",
+                    "email": "admin@mail.com",
+                    "first_name": "Juan",
+                    "second_name": "Coso",
+                    "last_name": "Perez",
+                }
+            ]
+        }
+    )
 
 class UserSchema(BaseModel):
     """Base Schema Class for Users."""

@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 from agenda_back.schemas.v1.common_schemas import IdOnlyResponse
 from agenda_back.schemas.v1.user_schemas import CreateUserRequestSchema
-from agenda_back.services.v1.users_service import UserService
+from agenda_back.services.v1.user_service import UserService
 
 
 @patch(
