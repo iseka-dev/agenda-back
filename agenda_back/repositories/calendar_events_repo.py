@@ -25,9 +25,10 @@ def get_calendar_events(
     """Get list of calendar events from database."""
     calendar_events = session.query(
         CalendarEvent
-    ).offset(pagination.offset).limit(pagination.limit).order_by(
-        pagination.order_by(pagination.sort)
-    ).all()
+    ).order_by(
+        pagination.sort
+    ).offset(pagination.offset).limit(pagination.limit).all()
+
     return CalendarEventsPaginatedResponse(
         calendar_events=calendar_events,
         total_count=len(calendar_events)
@@ -62,7 +63,8 @@ def create_calendar_event(
         start_datetime=calendar_event.start_datetime,
         end_datetime=calendar_event.end_datetime,
         title=calendar_event.title,
-        description=calendar_event.description
+        description=calendar_event.description,
+        owner_id="19c8d0a6-8ef4-4bf2-bd63-eef8d291c9f8",
     )
 
     session.add(calendar_event)

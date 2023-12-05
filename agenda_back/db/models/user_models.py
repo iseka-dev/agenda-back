@@ -24,45 +24,41 @@ class User(Base):
     username: Mapped[str] = mapped_column(
         String(50),
         index=True,
-        nullable=False
+        nullable=False,
+        unique=True,
     )
     password: Mapped[str] = mapped_column(
         String(255),
-        nullable=True
+        nullable=True,
     )
 
     first_name: Mapped[str] = mapped_column(
         String(50),
-        nullable=False
+        nullable=False,
     )
     second_name: Mapped[str] = mapped_column(
         String(50),
-        nullable=True
+        nullable=True,
     )
     last_name: Mapped[str] = mapped_column(
         String(50),
         index=True,
-        nullable=False
-    )
-    email: Mapped[str] = mapped_column(
-        String(50),
-        index=True,
-        nullable=False
+        nullable=False,
     )
 
     create_datetime: Mapped[str] = mapped_column(
         DateTime,
         default=datetime.utcnow,
-        nullable=False
+        nullable=False,
     )
     last_update_datetime: Mapped[str] = mapped_column(
         DateTime,
         default=datetime.utcnow,
         onupdate=datetime.utcnow,
-        nullable=False
+        nullable=False,
     )
     removed_datetime: Mapped[str] = mapped_column(
         DateTime,
         default=None,
-        nullable=True
+        nullable=True,
     )

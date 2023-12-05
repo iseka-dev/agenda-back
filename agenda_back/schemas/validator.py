@@ -10,11 +10,25 @@ class ValidatorSchema(BaseModel):
     Schema for field and data validation.
 
     Included validation:
+    - Required field validation
+    - Password format validations
     - Phone validation format
     - Zip Code validation format
-    - Required field validation
-    - password format validations
     """
+
+    @staticmethod
+    def required_field(value: int | str) -> int | str:
+        if not value:
+            raise ValueError("Missing required field.")
+        return value
+
+    @staticmethod
+    def password_validation(value: int | str) -> int | str:
+        if value and len(value) < 8:
+            raise ValueError(
+                "Password too short, 8 characters minimun."
+            )
+        return value
 
     @staticmethod
     def phone_validation(v: int | str) -> int | str:
@@ -33,18 +47,4 @@ class ValidatorSchema(BaseModel):
             if total not in (5, 9):
                 raise ValueError("Invalid ZIP code.")
             value = v_digits
-        return value
-
-    @staticmethod
-    def required_field(value: int | str) -> int | str:
-        if not value:
-            raise ValueError("Missing required field.")
-        return value
-
-    @staticmethod
-    def password_validation(value: int | str) -> int | str:
-        if value and len(value) < 8:
-            raise ValueError(
-                "Password too short, 8 characters minimun."
-            )
         return value

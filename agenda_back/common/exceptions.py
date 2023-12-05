@@ -8,3 +8,6 @@ class TokenNotFoundError(Exception):  # noqa: D101
 
 class TokenTypeError(Exception):  # noqa: D101
     pass
+
+class ExpiredSignatureError(Exception):  # noqa: D101
+    pass

@@ -17,27 +17,34 @@ from agenda_back.common.enums import Orderby
 class IdOnlyResponse(BaseModel):
     """ID only response schema."""
 
-    model_config = ConfigDict(from_attributes=True)
-
     id: UUID
+
+    model_config = ConfigDict(from_attributes=True)
 
 
 class PaginationSchema(BaseModel):
     """Pagination schema with skip and offset values."""
 
-    model_config = ConfigDict(
-        json_schema_extra={
-            "offset": 0,
-            "limit": 10,
-            "sort": "id",
-            "order": "asc",
-        }
-    )
-
     offset: int = 0
     limit: int = 10
     sort: str = "id"
     order: str = "asc"
+
+    model_config = ConfigDict(
+        # TODO: validate_default as a way to
+        # fullfull default values instead of classmethods.
+        # TODO: validate_assignment=True,
+        json_schema_extra={
+            "examples": [
+                {
+                    "offset": 0,
+                    "limit": 10,
+                    "sort": "id",
+                    "order": "asc",
+                }
+            ]
+        }
+    )
 
     @field_validator("*", mode="before")
     @classmethod

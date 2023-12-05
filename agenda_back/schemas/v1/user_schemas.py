@@ -13,7 +13,6 @@ class CreateUserRequestSchema(BaseModel):
 
     username: str
     password: str
-    email: str
     first_name: str
     second_name: str | None = None
     last_name: str
@@ -22,9 +21,8 @@ class CreateUserRequestSchema(BaseModel):
         json_schema_extra={
             "examples": [
                 {
-                    "username": "admin",
+                    "username": "admin@mail.com",
                     "password": "admin123123",
-                    "email": "admin@mail.com",
                     "first_name": "Juan",
                     "second_name": "Coso",
                     "last_name": "Perez",
@@ -36,12 +34,40 @@ class CreateUserRequestSchema(BaseModel):
 class UserSchema(BaseModel):
     """Base Schema Class for Users."""
 
-    model_config = ConfigDict(from_attributes=True)
-
     id: UUID
     username: str
     password: str
-    email: str
     first_name: str
     second_name: str | None = None
     last_name: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class UserResponse(BaseModel):
+    """Schema for a single User with no exposed password."""
+
+    id: UUID
+    username: str
+    first_name: str
+    second_name: str | None = None
+    last_name: str
+
+
+class UsersPaginatedDBResponse(BaseModel):
+    """Users schema for db response. password included."""
+
+    users: list[UserSchema]
+    total_count: int
+
+class UsersPaginatedResponse(BaseModel):
+    """Users schema for db response. password excluded."""
+
+    users: list[UserResponse]
+    total_count: int
+
+class CurrentUser(BaseModel):
+    """Schema with the data about current api user."""
+
+    expiration_time: int
+    password: str | None

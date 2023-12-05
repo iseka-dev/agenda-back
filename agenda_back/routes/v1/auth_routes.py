@@ -8,8 +8,9 @@ Authentication routes.
 
 """
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 from jose import ExpiredSignatureError, JWTError
+from sqlalchemy.orm import Session
 
 from agenda_back.common.exceptions import (
     InvalidCredentialsError,
@@ -17,6 +18,7 @@ from agenda_back.common.exceptions import (
     TokenTypeError,
 )
 from agenda_back.common.logger import log
+from agenda_back.db.database import get_db_session
 from agenda_back.schemas.v1.auth_schemas import (
     LoginSchema,
     ResetPasswordRequestSchema,
@@ -25,14 +27,20 @@ from agenda_back.schemas.v1.auth_schemas import (
 from agenda_back.services.v1.auth_service import AuthService
 from agenda_back.services.v1.user_service import UserService
 
-auth_routes = APIRouter(prefix="/v1/auth", tags=["authentication"])
+auth_routes = APIRouter(
+    prefix="/v1/auth",
+    tags=["auth"],
+)
 
 
 @auth_routes.post("/login", status_code=status.HTTP_200_OK)
-def login(data: LoginSchema) -> dict:
+def login(
+    data: LoginSchema,
+    db_session: Session = Depends(get_db_session)
+) -> dict:
     """Login functionality."""
     try:
-        return AuthService().login(data)
+        return AuthService().login(db_session, data)
     except InvalidCredentialsError as e:
         code = status.HTTP_401_UNAUTHORIZED
         error = f"[Error]: {e}"
@@ -67,7 +75,7 @@ async def refresh_token(refresh_token: str) -> str:
 
 
 @auth_routes.post("/set-password", status_code=status.HTTP_200_OK)
-async def set_password(data: SetPasswordRequestSchema) -> any:
+async def set_password(data: SetPasswordRequestSchema) -> str:
     """Set a password for the first time."""
     try:
         return await UserService().set_password(data)
@@ -88,7 +96,7 @@ async def set_password(data: SetPasswordRequestSchema) -> any:
 
 
 @auth_routes.put("/reset-password", status_code=status.HTTP_200_OK)
-async def reset_password(data: ResetPasswordRequestSchema) -> any:
+async def reset_password(data: ResetPasswordRequestSchema) -> str:
     """Set a new password."""
     try:
         return await UserService().reset_password(data)

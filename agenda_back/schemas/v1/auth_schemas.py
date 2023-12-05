@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel, ConfigDict, EmailStr, field_validator
 
-from agenda_back.schemas.v1.validator import ValidatorSchema
+from agenda_back.schemas.validator import ValidatorSchema
 
 
 class Token(BaseModel):
@@ -23,6 +23,17 @@ class LoginSchema(BaseModel):
 
     username: EmailStr
     password: str
+
+    model_config = ConfigDict(
+        json_schema_extra={
+            "examples": [
+                {
+                    "username": "admin@mail.com",
+                    "password": "admin123123",
+                }
+            ]
+        }
+    )
 
 
 class SetPasswordRequestSchema(ValidatorSchema):

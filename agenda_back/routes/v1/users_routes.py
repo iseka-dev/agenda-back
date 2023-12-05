@@ -1,8 +1,7 @@
 """Routes to the users api."""
 
-from sqlite3 import IntegrityError
-
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from agenda_back.common.logger import log

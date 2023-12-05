@@ -28,8 +28,7 @@ def client() -> TestClient:
 def user() -> UserSchema:
     return UserSchema(
         id="a0866e45-9dd6-4874-b4b2-74efd20e5761",
-        username="user",
-        email="some_email@gmail.com",
+        username="some_email@gmail.com",
         first_name="Juan",
         second_name="Pescador",
         last_name="Perez",
@@ -45,7 +44,7 @@ def calendar_event() -> CalendarEventSchema:
         title="Some Title",
         description="Some not necessary description",
         owner_id="a0866e45-9dd6-4874-b4b2-74efd20e5872",
-        attendee_ids=["a0866e45-9dd6-4874-b4b1-62efd20e5111"]
+        attendee_ids=["a0866e45-9dd6-4874-b4b1-62efd20e5111"],
     )
 
 
@@ -73,7 +72,7 @@ def calendar_event_create_data() -> CalendarEventCreateRequest:
         "title": "Event Title",
         "description": "Some event description",
         "owner_id": "a0866e45-9dd6-4874-b4b2-74efd20e5872",
-        "attendee_ids": []
+        "attendee_ids": [],
     }
 
 
@@ -85,7 +84,7 @@ def calendar_event_create_schema() -> CalendarEventCreateRequest:
             title="Event Title",
             description="Some event description",
             owner_id="a0866e45-9dd6-4874-b4b2-74efd20e5872",
-            attendee_ids=[]
+            attendee_ids=[],
         )
 
 
@@ -102,11 +101,10 @@ def id_uuid_string() -> str:
 @pytest.fixture()
 def user_create_data() -> dict:
     return {
-        "username": "user",
-        "email": "some_email@gmail.com",
+        "username": "some_email@gmail.com",
+        "password": "pass",
         "first_name": "Juan",
         "last_name": "Perez",
-        "password": "pass"
     }
 
 
@@ -117,5 +115,5 @@ def user_create_schema() -> CreateUserRequestSchema:
         email="some_email@gmail.com",
         first_name="Juan",
         last_name="Perez",
-        password="pass"  # noqa: S106
+        password="pass",  # noqa: S106
     )

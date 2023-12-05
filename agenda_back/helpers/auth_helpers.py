@@ -1,11 +1,12 @@
 """Helpers related with authentication."""
 
-from datetime import timedelta, utcnow
 
 from jose import jwt
 from passlib.context import CryptContext
 
 from agenda_back.common.config import settings
+from agenda_back.common.enums import TokenTypes
+from agenda_back.common.exceptions import TokenTypeError
 
 password_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -21,18 +22,30 @@ def verify_password(password: str, hashed_pass: str) -> bool:
 
 
 def create_token(
-    payload: dict[str], expires_delta: int | None = None
+    payload: dict[str]
 ) -> str:
     """Create token with expiration date."""
-    if expires_delta is not None:
-        expires_delta = utcnow() + expires_delta
-    else:
-        expires_delta = utcnow() + timedelta(
-            minutes=settings.ACCESS_TOKEN_MINUTES_VALIDITY_TIME
-        )
-
-    to_encode = {"exp": expires_delta, "sub": str(payload)}
     encoded_jwt = jwt.encode(
-        to_encode, settings.JWT_SECRET_KEY, settings.JWT_ALGORITHM
+        payload, settings.JWT_SECRET_KEY, settings.JWT_ALGORITHM
     )
     return encoded_jwt
+
+
+def validate_token_type(required_type: TokenTypes, token_type: str) -> None:
+    """
+    Validate that the token is proper type.
+
+    Possible types:
+    AUTH | REFRESH | PASSWORD_CREATE | PASSWORD_RESET
+    """
+    try:
+        token_type = TokenTypes(token_type)
+    except Exception:
+        msg = f"Invalid token type: '{token_type}'."
+        raise TokenTypeError(msg)  # noqa: B904, TRY200
+    if token_type != required_type:
+        msg = f"""
+            Required token type:'{required_type}'\n`
+            Given token type: '{token_type}'.
+        """
+        raise TokenTypeError(msg)
